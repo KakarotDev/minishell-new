@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   set_entrance.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/26 15:58:34 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/05 19:52:05 by myokogaw         ###   ########.fr       */
+/*   Created: 2024/05/05 17:10:39 by myokogaw          #+#    #+#             */
+/*   Updated: 2024/05/05 20:27:58 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	env(char **args)
+char	*set_entrance(void)
 {
-	char	**envp;
-	int		size;
+	char	*entrance;
+	char	*mid;
 
-	size = 1;
-	envp = hook_environ(NULL, 0);
-	while (*(++args))
-		size++;
-	if (size > 1)
-	{
-		ft_putstr_fd("Error\n env: doesn't accept option or arguments\n", 2);
-		return (EXIT_FAILURE);
-	}
-	while (*envp)
-	{
-		if (*envp && ft_strchr(*envp, '=') && ft_strncmp(*envp, "_=", 2))
-			printf("%s\n", *envp);
-		envp++;
-	}
-	return (EXIT_SUCCESS);
+	mid = ft_strjoin("minishell:", hook_pwd(NULL, 0));
+	entrance = ft_strjoin(mid, "$ ");
+	free(mid);
+	return (entrance);
 }

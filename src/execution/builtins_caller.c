@@ -6,7 +6,7 @@
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 17:00:17 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/01 19:51:37 by myokogaw         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:52:30 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ int	builtins_caller(char **matrix)
 		exit_status = export(matrix);
 	else if (!ft_strncmp(matrix[0], "cd", ft_strlen(matrix[0])))
 		exit_status = cd(matrix);
+	else if (!ft_strncmp(matrix[0], "env", ft_strlen(matrix[0])))
+		exit_status = env(matrix);
+	else if (!ft_strncmp(matrix[0], "pwd", ft_strlen(matrix[0])))
+		exit_status = pwd();
 	if (exit_status != -1)
-		return(last_exit_status(exit_status));
+		return (last_exit_status(exit_status));
 	return (exit_status);
 }

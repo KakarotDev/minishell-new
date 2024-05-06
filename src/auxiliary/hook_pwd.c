@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   hook_pwd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/26 15:58:34 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/05 19:52:05 by myokogaw         ###   ########.fr       */
+/*   Created: 2024/05/05 16:58:57 by myokogaw          #+#    #+#             */
+/*   Updated: 2024/05/05 17:09:47 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	env(char **args)
+char	*hook_pwd(char *n_pwd, int to_free)
 {
-	char	**envp;
-	int		size;
+	static char	*static_pwd;
 
-	size = 1;
-	envp = hook_environ(NULL, 0);
-	while (*(++args))
-		size++;
-	if (size > 1)
+	if (!static_pwd && n_pwd)
+		static_pwd = n_pwd;
+	if (static_pwd && to_free)
 	{
-		ft_putstr_fd("Error\n env: doesn't accept option or arguments\n", 2);
-		return (EXIT_FAILURE);
+		free(static_pwd);
+		static_pwd = NULL;
 	}
-	while (*envp)
-	{
-		if (*envp && ft_strchr(*envp, '=') && ft_strncmp(*envp, "_=", 2))
-			printf("%s\n", *envp);
-		envp++;
-	}
-	return (EXIT_SUCCESS);
+	return (static_pwd);
 }

@@ -6,61 +6,11 @@
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 15:59:36 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/01 19:48:33 by myokogaw         ###   ########.fr       */
+/*   Updated: 2024/05/05 20:11:54 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_printf_variables_export(char *variable)
-{
-	write(1, "declare -x ", 11);
-	while (*variable != '=' && *variable)
-		variable += write(1, variable, 1);
-	if (!*variable)
-	{
-		write(1, "\n", 1);
-		return ;
-	}
-	else
-	{
-		variable += write(1, variable, 1);
-		write(1, "\"", 1);
-	}
-	while (*variable)
-		variable += write(1, variable, 1);
-	write(1, "\"\n", 2);
-	return ;
-}
-
-int	show_variables(char **envp)
-{
-	char	upper;
-	char	lower;
-	int		i;
-
-	upper = 'A';
-	lower = 'a';
-	while (lower < 'z' && upper < 'Z')
-	{
-		i = 0;
-		while (envp[i])
-		{
-			if (envp[i][0] == lower || envp[i][0] == upper)
-				ft_printf_variables_export(envp[i]);
-			i++;
-		}
-		lower++;
-		upper++;
-	}
-	return (EXIT_SUCCESS);
-}
-
-int	report_error_export(void)
-{
-	ft_putstr_fd("Error\n export: not a valid identifier\n", 2);
-	return (1);
-}
 
 int	verify_prev_char_equal(char *assignment)
 {
@@ -129,19 +79,13 @@ char	**append_new_var(char **envp, char *assignment)
 		i++;
 	}
 	new_env[i++] = ft_strdup(assignment);
-	ft_free_matrix((void **) envp);
+	hook_environ(NULL, 1);
 	return (new_env);
-}
-
-int	free_and_exit_export(char **envp)
-{
-	ft_free_matrix((void **) envp);
-	return (EXIT_FAILURE);
 }
 
 int	export(char **matrix)
 {
-	char **envp;
+	char	**envp;
 
 	envp = hook_environ(NULL, 0);
 	if (!(*(++matrix)))
@@ -155,5 +99,6 @@ int	export(char **matrix)
 		envp = append_new_var(envp, *matrix);
 		matrix++;
 	}
+	hook_environ(envp, 0);
 	return (EXIT_SUCCESS);
 }

@@ -28,14 +28,26 @@
 # include <wait.h>
 # include "libft.h"
 
+// Boolean defines
 # define TRUE 1
 # define FALSE 0
+
+// Open defines
 # define OPEN_WR 1
 # define OPEN_RD 2
+
+// AST defines
 # define RIGHT 3
 # define LEFT 4
+
+// Syntax error defines
 # define UNCLOSED_QUOTE 5
 # define UNEXPECTED 6
+
+// Define errors for cd command;
+#define TOOMANY 3
+#define NOTSETHOME 2
+#define ERRNO 1
 
 enum	e_type
 {
@@ -94,6 +106,10 @@ int		last_exit_status(int exit_status);
 int		command_not_found(char *path, char **matrix);
 int		ft_count_tokens(t_dlist **exec_tokens);
 int		run_program(void);
+char	*catch_cwd(void);
+char	*hook_pwd(char *n_pwd, int to_free);
+char	*set_entrance(void);
+char	*ft_getenv(char *var);
 
 // dlist procedures
 int		ft_dlist_have_type(t_dlist **tokens, enum e_type type);
@@ -140,7 +156,7 @@ int		check_pipes(t_dlist **tokens);
 int		syntax_error(int type, t_dlist **tokens, char *input);
 
 // Parser
-int		parser(t_dlist **tokens);
+void	parser(t_dlist **tokens);
 int		parser_validation(t_dlist **tokens);
 
 // AST procedures
@@ -155,6 +171,11 @@ int		builtins_caller(char **matrix);
 int		cd(char **matrix);
 int		export(char **matrix);
 int		echo(char **matrix);
+int		pwd(void);
+int		env(char **args);
+int		report_error_export(void);
+int		show_variables(char **envp);
+void	ft_printf_variables_export(char *variable);
 
 // Interrupt program
 int		interrupt_program(char *input);
@@ -163,7 +184,7 @@ int		interrupt_program(char *input);
 char	**tokens_to_args(t_ast *leaf, char **envp);
 char	*get_path(char *command, char **envp);
 void	handle_pipe(t_ast *leaf);
-int		execution(t_ast **ast);
+void	execution(t_ast **ast);
 
 #  ifdef __cplusplus
 	} // extern "C"

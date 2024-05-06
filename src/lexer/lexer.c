@@ -69,7 +69,7 @@ t_dlist	**lexer(char *input)
 	t_dlist	**tokens;
 	int		fd;
 
-	fd = ft_open_fd("_input_file1", OPEN_WR);
+	fd = ft_open_fd("/tmp/.input_minishell", OPEN_WR);
 	while (*input != '\0' && (*input == ' ' || *input == '\t'))
 		input++;
 	while (*input)
@@ -87,6 +87,6 @@ t_dlist	**lexer(char *input)
 			input += write(fd, input, 1);
 	}
 	close(fd);
-	tokens = generate_tokens("_input_file1");
+	tokens = generate_tokens("/tmp/.input_minishell");
 	return (tokens);
 }

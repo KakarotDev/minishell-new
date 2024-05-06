@@ -6,64 +6,76 @@
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 15:58:57 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/01 19:47:10 by myokogaw         ###   ########.fr       */
+/*   Updated: 2024/05/05 20:17:19 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-int	ft_count_el(char **matrix)
+void	update_environment(void)
 {
-	int	i;
+	char	*matrix[3];
 
-	i = 0;
-	if (!matrix)
-		return (i);
-	if (!*matrix)
-		return (i);
-	while (matrix[i])
-		i++;
-	return (i);
+	matrix[0] = NULL;
+	matrix[1] = ft_strjoin("OLD_PWD=", hook_pwd(NULL, 0));
+	matrix[2] = NULL;
+	export(matrix);
+	free(matrix[1]);
+	hook_pwd(NULL, 1);
+	hook_pwd(catch_cwd(), 0);
+	matrix[1] = ft_strjoin("PWD=", hook_pwd(NULL, 0));
+	export(matrix);
+	free(matrix[1]);
+	return ;
 }
 
-// Erros do comando cd: 1.
-// variável de ambiente home não setada, e chama-se o commando cd sem argumentos, dar mensagem de erro
-// bash: cd: HOME not set
-// 2. Passar mais de um argumento para o comando cd, too many arguments
+int	error_msg_cd(int err, char *path)
+{
+	if (err == ERRNO)
+		perror("Error\n cd");
+	else if (err == NOTSETHOME)
+		ft_putstr_fd("Error\n cd: HOME not set\n", 2);
+	else if (err == TOOMANY)
+		ft_putstr_fd("Error\n cd: too many arguments\n", 2);
+	if (path)
+		free(path);
+	return (EXIT_FAILURE);
+}
+
+int	try_except_change_dir(char *curpath)
+{
+	char	*home;
+
+	home = ft_getenv("$HOME");
+	if (curpath == NULL && home == NULL)
+		return (error_msg_cd(NOTSETHOME, home));
+	else if (curpath == NULL && home)
+	{
+		if (chdir(home))
+			return (error_msg_cd(ERRNO, home));
+	}
+	else if (curpath)
+	{
+		if (chdir(curpath))
+			return (error_msg_cd(ERRNO, home));
+	}
+	update_environment();
+	free(home);
+	free(curpath);
+	return (EXIT_SUCCESS);
+}
+
 int	cd(char **matrix)
 {
-	char	*path;
-	int		args;
-	
-	args = ft_count_el(matrix);
-	if (args > 2)
+	char	*curpath;
+
+	curpath = NULL;
+	while (*++matrix)
 	{
-		ft_putstr_fd("cd: too many arguments\n", 2);
-		return (1);
+		if (**matrix && curpath == NULL)
+			curpath = ft_strdup(*matrix);
+		else if (curpath && **matrix != '\0')
+			return (error_msg_cd(TOOMANY, curpath));
 	}
-	if (args == 1)
-	{
-		path = get_content_var(read_var(hook_environ(NULL, 0), "HOME"));
-		if (!path)
-		{
-			ft_putstr_fd("cd: HOME not set\n", 2);
-			return (1);
-		}
-		else
-		{
-			if (chdir(path) == -1)
-			{
-				perror("");
-				return (1);
-			}
-			return (0);
-		}
-	}
-	if (chdir(matrix[1]) == -1)
-	{
-		perror("");
-		return (1);
-	}
-	return (0);
+	return (try_except_change_dir(curpath));
 }

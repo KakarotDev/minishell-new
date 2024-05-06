@@ -1,36 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/26 15:58:34 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/05 19:52:05 by myokogaw         ###   ########.fr       */
+/*   Created: 2024/05/05 20:13:06 by myokogaw          #+#    #+#             */
+/*   Updated: 2024/05/05 20:28:20 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	env(char **args)
+char	*ft_getenv(char *var)
 {
-	char	**envp;
-	int		size;
+	char	*var_and_value;
+	char	*value;
 
-	size = 1;
-	envp = hook_environ(NULL, 0);
-	while (*(++args))
-		size++;
-	if (size > 1)
+	var_and_value = read_var(hook_environ(NULL, 0), var);
+	value = get_content_var(var_and_value);
+	free(var_and_value);
+	if (!*value)
 	{
-		ft_putstr_fd("Error\n env: doesn't accept option or arguments\n", 2);
-		return (EXIT_FAILURE);
+		free(value);
+		return (NULL);
 	}
-	while (*envp)
-	{
-		if (*envp && ft_strchr(*envp, '=') && ft_strncmp(*envp, "_=", 2))
-			printf("%s\n", *envp);
-		envp++;
-	}
-	return (EXIT_SUCCESS);
+	return (value);
 }

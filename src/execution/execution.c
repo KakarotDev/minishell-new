@@ -22,29 +22,18 @@ void	execute(char **tokens, char **envp)
 		ft_free_matrix((void **) tokens);
 		return ;
 	}
-	path = get_path(tokens[0], envp);
-	if (!path)
-	{
-		last_exit_status(command_not_found(path, tokens));
-		return ;
-	}
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(path, tokens, envp) < 0)
-		{
-			ft_free_matrix((void **) tokens);
-			ft_free_matrix((void **) envp);
-			exit(1);
-		}
+		path = get_path(tokens[0], envp);
+		execve(path, tokens, envp);
 	}
 	ft_free_matrix((void **)tokens);
-	free(path);
 	last_exit_status(get_ret_process(pid));
 	return ;
 }
 
-int	execution(t_ast **ast)
+void	execution(t_ast **ast)
 {
 	t_ast	*leaf;
 	char	**envp;
@@ -59,5 +48,5 @@ int	execution(t_ast **ast)
 		execution(&(leaf->right));
 	else if (leaf->exec_tokens && *leaf->exec_tokens)
 		execute(tokens_to_args(leaf, envp), envp);
-	return (0);
+	return ;
 }

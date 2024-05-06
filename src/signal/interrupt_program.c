@@ -15,6 +15,7 @@
 int	interrupt_program(char *input)
 {
 	hook_environ(NULL, 1);
+	hook_pwd(NULL, 1);
 	free(input);
 	rl_clear_history();
 	printf("\n");

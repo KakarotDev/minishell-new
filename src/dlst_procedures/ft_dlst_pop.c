@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_dlst_pop.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/26 15:58:34 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/05 19:52:05 by myokogaw         ###   ########.fr       */
+/*   Created: 2024/05/05 18:34:38 by myokogaw          #+#    #+#             */
+/*   Updated: 2024/05/05 20:07:09 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	env(char **args)
+t_dlist	*ft_dlst_pop(t_dlist **tokens)
 {
-	char	**envp;
-	int		size;
+	t_dlist	*last;
+	t_dlist	*new_last;
 
-	size = 1;
-	envp = hook_environ(NULL, 0);
-	while (*(++args))
-		size++;
-	if (size > 1)
-	{
-		ft_putstr_fd("Error\n env: doesn't accept option or arguments\n", 2);
-		return (EXIT_FAILURE);
-	}
-	while (*envp)
-	{
-		if (*envp && ft_strchr(*envp, '=') && ft_strncmp(*envp, "_=", 2))
-			printf("%s\n", *envp);
-		envp++;
-	}
-	return (EXIT_SUCCESS);
+	if (!*tokens)
+		return (NULL);
+	last = ft_dlst_last(*tokens);
+	new_last = last->prev;
+	new_last->next = NULL;
+	last->prev = NULL;
+	return (last);
 }

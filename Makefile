@@ -98,8 +98,8 @@ MAIN_SRC = ./src/main.c
 CFILES += $(addprefix $(AST)/, ft_ast_append_leaf.c ft_ast_new_leaf.c ft_get_last_leaf.c ft_create_ast.c ft_constructor_ast.c)
 CFILES += $(addprefix $(AUXILIARY)/, free_struct_token.c ft_count_tokens.c ft_cpy_array_data.c ft_destructor_struct.c ft_free_ast.c \
 	ft_free_matrix.c ft_have_char.c ft_have_op.c ft_is_redirect.c ft_open_fd.c ft_open_fork.c ft_print_ast.c ft_print_dlist.c \
-	ft_print_matrix.c ft_strndup.c get_ret_process.c hook_environ.c last_exit_status.c syntax_error.c)
-CFILES += $(addprefix $(BUILTINS)/, cd.c export.c echo.c)
+	ft_print_matrix.c ft_strndup.c get_ret_process.c hook_environ.c last_exit_status.c syntax_error.c hook_pwd.c set_entrance.c ft_getenv.c)
+CFILES += $(addprefix $(BUILTINS)/, cd.c export.c echo.c pwd.c env.c export_utils.c)
 CFILES += $(addprefix $(DLST_PROCEDURES)/, ft_add_currnext.c ft_append_dlist.c ft_cpy_dlst.c ft_cpy_node.c ft_dlist_delete_from.c \
 	ft_dlist_have_type.c ft_dlist_last_occur.c ft_dlst_last.c ft_newnode_dlist.c)
 CFILES += $(addprefix $(ENVIRONMENT)/, copy_environ.c read_var.c)

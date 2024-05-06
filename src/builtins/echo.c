@@ -6,20 +6,21 @@
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 15:59:10 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/01 21:48:41 by myokogaw         ###   ########.fr       */
+/*   Updated: 2024/05/05 20:07:30 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	write_echo(char *matrix, int *space)
+void	write_echo(char *str, int *space)
 {
-	if (*space)
-			write(1, " ", 1);
+	if (*space && *str != '\0')
+		write(1, " ", 1);
 	else
 		*space += 1;
-	while (*matrix)
-		matrix += write(1, matrix, 1);
+	while (*str)
+		str += write(1, str, 1);
+	return ;
 }
 
 int	echo(char **matrix)

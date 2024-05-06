@@ -12,13 +12,8 @@
 
 #include "minishell.h"
 
-static char	*get_var(t_token *tok)
+static char	*get_var(t_token *tok, int s_quote, int d_quote)
 {
-	int	s_quote;
-	int	d_quote;
-
-	s_quote = 0;
-	d_quote = 0;
 	while (tok->lex[tok->data[0]])
 	{
 		if (tok->lex[tok->data[0]] == '$' && s_quote == 0)
@@ -34,8 +29,12 @@ static char	*get_var(t_token *tok)
 		tok->data[0] += 1;
 	}
 	tok->data[1] = tok->data[0];
-	if (tok->lex[++(tok->data[0])] == '$')
+	if (tok->lex[++(tok->data[0])] == '?')
+		return (ft_strdup("$?"));
+	if (tok->lex[(tok->data[0])] == '$')
 		return (ft_strdup("$$"));
+	if (ft_isdigit((tok->lex[(tok->data[0])])))
+		return (ft_strndup(tok->lex, tok->data[1], tok->data[0] - tok->data[1]));
 	while (ft_isalnum(tok->lex[tok->data[0]]) || tok->lex[tok->data[0]] == '_')
 		tok->data[0] += 1;
 	return (ft_strndup(tok->lex, tok->data[1], tok->data[0] - tok->data[1]));
@@ -64,7 +63,7 @@ static void	merging_new_token(t_dlist *token)
 	int		i;
 
 	i = 0;
-	lexemes = get_all_lexemes(".var_merge");
+	lexemes = get_all_lexemes("/tmp/.merge_token");
 	new_token = token;
 	ft_memset(data, 0, sizeof(data));
 	data[0] = -1;
@@ -77,12 +76,12 @@ static void	merging_new_token(t_dlist *token)
 						ft_newnode_dlist(lexemes[i], 6, data), i);
 			else
 				new_token = ft_add_currnext(new_token,
-					ft_newnode_dlist(lexemes[i], 7, data), i);
+						ft_newnode_dlist(lexemes[i], 7, data), i);
 			ft_free_matrix((void **) lexemes);
 			return ;
 		}
 		new_token = ft_add_currnext(new_token,
-			ft_newnode_dlist(lexemes[i], 6, data), i);
+				ft_newnode_dlist(lexemes[i], 6, data), i);
 		i++;
 	}
 	if (lexemes[i] == NULL)
@@ -96,7 +95,7 @@ static void	writing_new_token_unquoted(t_dlist *token, char *value_var, char *va
 	char	*lexeme;
 	int		fd;
 
-	fd = ft_open_fd(".var_merge", OPEN_WR);
+	fd = ft_open_fd("/tmp/.merge_token", OPEN_WR);
 	lexeme = token->tok->lex;
 	while (token->tok->data[1]--)
 		lexeme += write(fd, lexeme, 1);
@@ -133,7 +132,7 @@ static void	writing_new_token_quoted(t_dlist *token, char *value_var, char *var)
 	char	*lexeme;
 	int		fd;
 
-	fd = ft_open_fd(".var_merge", OPEN_WR);
+	fd = ft_open_fd("/tmp/.merge_token", OPEN_WR);
 	lexeme = token->tok->lex;
 	while (token->tok->data[1]--)
 		lexeme += write(fd, lexeme, 1);
@@ -161,7 +160,7 @@ void	var_expansion(t_dlist *token, char **environment)
 	char	*var_content;
 	char	*value_var;
 
-	var = get_var(token->tok);
+	var = get_var(token->tok, 0, 0);
 	var_content = read_var(environment, var);
 	value_var = get_content_var(var_content);
 	if (token->tok->data[2])

@@ -6,7 +6,7 @@
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 14:33:59 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/02 19:54:45 by myokogaw         ###   ########.fr       */
+/*   Updated: 2024/05/05 20:24:53 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	remove_quotes(t_dlist *token)
 	int		i;
 	int		fd;
 
-	fd = ft_open_fd("remove_quotes_file", OPEN_WR);
+	fd = ft_open_fd("/tmp/.remove_quotes", OPEN_WR);
 	i = 0;
 	lexeme = token->tok->lex;
 	while (lexeme[i])
@@ -63,7 +63,7 @@ void	remove_quotes(t_dlist *token)
 			i += write(fd, &lexeme[i], 1);
 	}
 	close(fd);
-	change_token(token, "remove_quotes_file");
+	change_token(token, "/tmp/.remove_quotes");
 }
 
 void	send_token_to_remove_quotes(t_dlist **tokens)

@@ -14,11 +14,6 @@
 
 int	parser_validation(t_dlist **tokens)
 {
-	if (!*tokens)
-	{
-		ft_destructor_struct(tokens);
-		return (0);
-	}
 	if (check_pipes(tokens))
 		return (syntax_error(UNEXPECTED, tokens, NULL));
 	else if (check_redirections(tokens))
