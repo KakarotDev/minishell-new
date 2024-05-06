@@ -58,15 +58,18 @@ char	*get_content_var(char *var)
 static void	merging_new_token(t_dlist *token)
 {
 	t_dlist	*new_token;
-	int		data[3];
+	int		data[4];
 	char	**lexemes;
 	int		i;
 
 	i = 0;
-	lexemes = get_all_lexemes("/tmp/.merge_token");
 	new_token = token;
 	ft_memset(data, 0, sizeof(data));
-	data[0] = -1;
+	if (token->tok->data[3])
+		data[0] = token->tok->data[0];
+	else
+		data[0] = token->tok->data[0] - 1;
+	lexemes = get_all_lexemes("/tmp/.merge_token");
 	while (lexemes[i])
 	{
 		if (lexemes[i + 1] == NULL)
@@ -97,8 +100,12 @@ static void	writing_new_token_unquoted(t_dlist *token, char *value_var, char *va
 
 	fd = ft_open_fd("/tmp/.merge_token", OPEN_WR);
 	lexeme = token->tok->lex;
+	token->tok->data[0] = 0;
 	while (token->tok->data[1]--)
+	{
 		lexeme += write(fd, lexeme, 1);
+		token->tok->data[0]++;
+	}
 	if (*value_var == ' ')
 	{
 		while (*value_var == ' ' && *value_var)
@@ -114,6 +121,7 @@ static void	writing_new_token_unquoted(t_dlist *token, char *value_var, char *va
 			write(fd, "\n", 1);
 		}
 		value_var += write(fd, value_var, 1);
+		token->tok->data[0]++;
 	}
 	while (*var == *lexeme && *var)
 	{
@@ -134,10 +142,17 @@ static void	writing_new_token_quoted(t_dlist *token, char *value_var, char *var)
 
 	fd = ft_open_fd("/tmp/.merge_token", OPEN_WR);
 	lexeme = token->tok->lex;
+	token->tok->data[0] = 0;
 	while (token->tok->data[1]--)
+	{
 		lexeme += write(fd, lexeme, 1);
+		token->tok->data[0]++;
+	}
 	while (*value_var)
+	{
 		value_var += write(fd, value_var, 1);
+		token->tok->data[0]++;
+	}
 	while (*var == *lexeme && *var)
 	{
 		var++;
@@ -161,8 +176,38 @@ void	var_expansion(t_dlist *token, char **environment)
 	char	*value_var;
 
 	var = get_var(token->tok, 0, 0);
+	value_var = NULL;
+	if (!ft_strncmp(var, "$", ft_strlen(var)))
+	{
+		if (token->tok->data[2])
+		{
+			if (token->tok->lex[token->tok->data[0]] == ' '
+				|| token->tok->lex[token->tok->data[0]] == '\0'
+				|| token->tok->lex[token->tok->data[0]] == '\''
+				|| token->tok->lex[token->tok->data[0]] == '\"')
+			{
+				value_var = ft_strdup("$");
+				token->tok->data[3] = 1;
+			}
+		}
+		else if (!token->tok->data[2])
+		{
+			if (token->tok->lex[token->tok->data[0]] == ' '
+				|| token->tok->lex[token->tok->data[0]] == '\0')
+			{
+				value_var = ft_strdup("$");
+				token->tok->data[3] = 1;
+			}
+		}
+	}
 	var_content = read_var(environment, var);
-	value_var = get_content_var(var_content);
+	if (!value_var)
+	{
+		if (!ft_strncmp(var, "$?", 2))
+			value_var = ft_itoa(last_exit_status(-1));
+		else
+			value_var = get_content_var(var_content);
+	}
 	if (token->tok->data[2])
 		writing_new_token_quoted(token, value_var, var);
 	else

@@ -1,0 +1,1 @@
+/bin/echo $"HOME"$USER $"HOM"E$USER $"'HOM'E"$USER $'HOM'E$USER $"HOME" $'HOME' $ "$" '$=' "$""$" $"$" $"42$" "$"$ $'$' '$'$ "$ " '$ ' $TESTNOTFOUND $HOME$TESTNOTFOUND $TESTNOTFOUND$HOME $TESTNOTFOUND$HOME$

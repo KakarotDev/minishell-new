@@ -64,7 +64,7 @@ enum	e_type
 typedef struct s_token {
 	enum e_type		type;
 	char			*lex;
-	int				data[3];
+	int				data[4];
 }	t_token;
 
 typedef struct s_dlist {

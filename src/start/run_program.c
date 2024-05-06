@@ -6,7 +6,7 @@
 /*   By: myokogaw <myokogaw@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 17:01:47 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/05 19:28:14 by myokogaw         ###   ########.fr       */
+/*   Updated: 2024/05/06 15:03:32 by myokogaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,11 @@ int	run_program(void)
 		else if (*input != '\0')
 		{
 			tokens = lexer(input);
-			parser(tokens);
+			send_token_to_expansion(tokens, hook_environ(NULL, 0));
+			send_token_to_remove_quotes(tokens);
+			ft_print_dlist(tokens);
+			ft_destructor_struct(tokens);
+			// parser(tokens);
 			free(input);
 		}
 	}

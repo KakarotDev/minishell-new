@@ -64,39 +64,38 @@ int	validate_assignment_word(char *lex, int *var_pos, int *is_quoted)
 {
 	int		s_quote;
 	int		d_quote;
-	char	*init_lex;
 
 	d_quote = 0;
 	s_quote = 0;
-	init_lex = lex;
-	while (*lex && *var_pos == -1)
+	if (*var_pos == -1)
+		*var_pos = 0;
+	while (lex[*var_pos])
 	{
-		if ((*lex == '$' && d_quote == 0 && s_quote == 0)
-			|| (*lex == '$' && d_quote == 1))
-			*var_pos = lex - init_lex;
-		if (*lex == '\'' && s_quote == 0 && d_quote == 0)
+		if ((lex[*var_pos] == '$' && d_quote == 0 && s_quote == 0)
+			|| (lex[*var_pos] == '$' && d_quote == 1))
+			break ;
+		if (lex[*var_pos] == '\'' && s_quote == 0 && d_quote == 0)
 			s_quote = 1;
-		else if (*lex == '\'' && s_quote == 1)
+		else if (lex[*var_pos] == '\'' && s_quote == 1)
 			s_quote = 0;
-		if (*lex == '\"' && d_quote == 0 && s_quote == 0)
+		if (lex[*var_pos] == '\"' && d_quote == 0 && s_quote == 0)
 			d_quote = 1;
-		else if (*lex == '\"' && d_quote == 1)
+		else if (lex[*var_pos] == '\"' && d_quote == 1)
 			d_quote = 0;
-		lex++;
+		*var_pos += 1;
 	}
 	if (d_quote == 1)
 		*is_quoted = 1;
-	if (*var_pos > -1)
+	if (lex[*var_pos] == '$')
 		return (1);
 	return (0);
 }
 
 int	ft_isword(t_dlist **head, char *lexeme)
 {
-	int	data[3];
+	int	data[4];
 
 	ft_memset(data, 0, sizeof(data));
-	data[0] = -1;
 	if (ft_have_char(lexeme, '$'))
 	{
 		if (validate_assignment_word(lexeme, &data[0], &data[2]))
