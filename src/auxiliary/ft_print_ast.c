@@ -12,63 +12,87 @@
 
 #include "minishell.h"
 
-void	ft_print_dlist_ast(t_dlist **head)
-{
-	t_dlist	*temp;
+// void	ft_print_dlist_ast(t_dlist **head)
+// {
+// 	t_dlist	*temp;
 
-	if (!head)
-		return ;
-	if (!*head)
-		return ;
-	temp = *head;
-	while (temp)
-	{
-		if (temp->tok->lex)
-			printf("%s\n", temp->tok->lex);
-		if (temp->tok->type == 1)
-			printf("%s\n", "DGREAT");
-		else if (temp->tok->type == 2)
-			printf("%s\n", "DLESS");
-		else if (temp->tok->type == 3)
-			printf("%s\n", "PIPE");
-		else if (temp->tok->type == 4)
-			printf("%s\n", "R_OUT");
-		else if (temp->tok->type == 5)
-			printf("%s\n", "R_IN");
-		else if (temp->tok->type == 6)
-			printf("%s\n", "WORD");
-		else if (temp->tok->type == 7)
-			printf("%s\n", "ASSIGNMENT_WORD");
-		if (temp->next == NULL)
-			break ;
-		temp = temp->next;
-	}
-	return ;
-}
+// 	if (!head)
+// 		return ;
+// 	if (!*head)
+// 		return ;
+// 	temp = *head;
+// 	while (temp)
+// 	{
+// 		if (temp->tok->lex)
+// 			printf("%s\n"void	ft_free_ast(t_ast **root)
+// {
+// 	t_ast	*temp;
+// 	t_ast	*temp1;
 
-void	ft_print_ast(t_ast **root)
-{
-	t_ast	*temp;
+// 	if (!root)
+// 		return ;
+// 	if (!*root)
+// 		return ;
+// 	temp = *root;
+// 	while (temp)
+// 	{
+// 		temp1 = temp;
+// 		temp = temp1->left;
+// 		if (temp == NULL)
+// 			break ;
+// 		ft_destructor_struct(temp1->right->exec_tokens);
+// 		free(temp1->right);
+// 		free(temp1);
+// 	}
+// 	ft_destructor_struct(temp1->exec_tokens);
+// 	free(temp1);
+// 	free(root);
+// 	return ;
+// }, temp->tok->lex);
+// 		if (temp->tok->type == 1)
+// 			printf("%s\n", "DGREAT");
+// 		else if (temp->tok->type == 2)
+// 			printf("%s\n", "DLESS");
+// 		else if (temp->tok->type == 3)
+// 			printf("%s\n", "PIPE");
+// 		else if (temp->tok->type == 4)
+// 			printf("%s\n", "R_OUT");
+// 		else if (temp->tok->type == 5)
+// 			printf("%s\n", "R_IN");
+// 		else if (temp->tok->type == 6)
+// 			printf("%s\n", "WORD");
+// 		else if (temp->tok->type == 7)
+// 			printf("%s\n", "ASSIGNMENT_WORD");
+// 		if (temp->next == NULL)
+// 			break ;
+// 		temp = temp->next;
+// 	}
+// 	return ;
+// }
 
-	if (!root)
-		return ;
-	if (!*root)
-		return ;
-	temp = *root;
-	while (temp)
-	{
-		if (temp->right)
-		{
-			printf("\nNew Block\n");
-			ft_print_dlist_ast(temp->right->exec_tokens);
-		}
-		if (temp->left == NULL)
-		{
-			printf("\nNew Block\n");
-			ft_print_dlist_ast(temp->exec_tokens);
-			break ;
-		}
-		temp = temp->left;
-	}
-	return ;
-}
+// void	ft_print_ast(t_ast **root)
+// {
+// 	t_ast	*temp;
+
+// 	if (!root)
+// 		return ;
+// 	if (!*root)
+// 		return ;
+// 	temp = *root;
+// 	while (temp)
+// 	{
+// 		if (temp->right)
+// 		{
+// 			printf("\nNew Block\n");
+// 			ft_print_dlist_ast(temp->right->exec_tokens);
+// 		}
+// 		if (temp->left == NULL)
+// 		{
+// 			printf("\nNew Block\n");
+// 			ft_print_dlist_ast(temp->exec_tokens);
+// 			break ;
+// 		}
+// 		temp = temp->left;
+// 	}
+// 	return ;
+// }

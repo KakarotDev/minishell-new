@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   ft_close_fds.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: parthur- <parthur-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/16 15:55:41 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/07 17:22:28 by parthur-         ###   ########.fr       */
+/*   Created: 2024/05/07 17:56:54 by parthur-          #+#    #+#             */
+/*   Updated: 2024/05/07 18:21:35 by parthur-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parser(t_dlist **tokens)
+void	close_fds(int fd_max)
 {
-	if (last_exit_status(parser_validation(tokens)))
-		return ;
-	return ;
+	int	i;
+
+	i = 3;
+	while (i <= fd_max)
+	{
+		close(i);
+		i++;
+	}
 }

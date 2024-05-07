@@ -73,13 +73,62 @@ typedef struct s_dlist {
 	struct s_dlist	*prev;
 }	t_dlist;
 
-typedef struct s_ast {
-	t_dlist			**exec_tokens;
-	int				size;
-	enum e_type		type;
-	struct s_ast	*left;
-	struct s_ast	*right;
+typedef struct s_ast
+{
+	enum e_type			id_t;
+	struct s_no_arvore	*esq;
+	struct s_no_arvore	*dir;
+	char		*path;
+	char		**cmd;
+	int			index;
 }	t_ast;
+
+typedef struct s_cmds
+{
+	char	**commands;
+	char	***args;
+}	t_cmds;
+
+typedef struct s_paths
+{
+	char	**right_paths;
+	char	*init_path;
+	char	**mat_path;
+	int		mat_len;
+}	t_paths;
+
+typedef struct s_aux
+{
+	int		i;
+	int		j;
+	int		k;
+	char	*path;
+}	t_aux;
+
+typedef struct s_fd_files
+{
+	int	in;
+	int	out;
+}	t_fd_files;
+
+typedef struct s_pipex
+{
+	t_cmds		cmds;
+	t_paths		paths;
+	t_fd_files	fd_files;
+	enum e_type	id_t;
+	char		**argv;
+	int			argc;
+	char		**envp;
+	int			pipe_fd[2];
+	int			fork_id;
+	int			c;
+	int			status;
+	int			fd_exec[2];
+	int			exit_fd;
+	int			input_fd;
+	int			f_id;
+}	t_pipex;
 
 // Print functions
 void	ft_print_matrix(char **matrix);
@@ -96,6 +145,7 @@ void	ft_free_ast(t_ast **root);
 void	ft_free_matrix(void **matrix);
 void	ft_destructor_struct(t_dlist **struct_to_clean);
 void	ft_cpy_array_data(int *dst, int *src, int size);
+void	close_fds(int fd_max);
 int		ft_open_fd(char *path, int flags);
 int		ft_have_char(char *str, char c);
 int		ft_have_op(char *input);
@@ -106,6 +156,7 @@ int		last_exit_status(int exit_status);
 int		command_not_found(char *path, char **matrix);
 int		ft_count_tokens(t_dlist **exec_tokens);
 int		run_program(void);
+int		have_pipe(t_dlist *tokens);
 char	*catch_cwd(void);
 char	*hook_pwd(char *n_pwd, int to_free);
 char	*set_entrance(void);
@@ -116,7 +167,8 @@ int		ft_dlist_have_type(t_dlist **tokens, enum e_type type);
 void	ft_dlist_delete_from(t_dlist *start_node);
 void	ft_append_dlist(t_dlist **head, t_dlist *node);
 t_dlist	*ft_dlst_last(t_dlist *node);
-t_dlist	*ft_newnode_dlist(char *lexeme, enum e_type type, int expansion_data[3]);
+t_dlist	*ft_newnode_dlist(char *lexeme, enum e_type type,
+		int expansion_data[3]);
 t_dlist	*ft_add_currnext(t_dlist *token, t_dlist *new_token, int iteration);
 t_dlist	*ft_cpy_node(t_dlist *node);
 t_dlist	*ft_dlist_last_occur(t_dlist **tokens, enum e_type type);
@@ -160,11 +212,6 @@ void	parser(t_dlist **tokens);
 int		parser_validation(t_dlist **tokens);
 
 // AST procedures
-t_ast	*ft_ast_new_leaf(t_dlist **exec_tokens, enum e_type type);
-t_ast	*ft_get_last_leaf(t_ast *root, int direction);
-t_ast	**ft_create_ast(t_dlist **tokens);
-void	ft_ast_append_leaf(t_ast **root, t_ast *new_leaf, int side);
-void	ft_constructor_ast(t_ast **root, t_dlist *last_occur);
 
 // Builtins
 int		builtins_caller(char **matrix);
@@ -181,10 +228,6 @@ void	ft_printf_variables_export(char *variable);
 int		interrupt_program(char *input);
 
 // Exec
-char	**tokens_to_args(t_ast *leaf, char **envp);
-char	*get_path(char *command, char **envp);
-void	handle_pipe(t_ast *leaf);
-void	execution(t_ast **ast);
 
 #  ifdef __cplusplus
 	} // extern "C"
