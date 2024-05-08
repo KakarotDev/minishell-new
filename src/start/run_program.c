@@ -6,13 +6,13 @@
 /*   By: parthur- <parthur-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 17:01:47 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/07 17:55:20 by parthur-         ###   ########.fr       */
+/*   Updated: 2024/05/08 17:20:18 by parthur-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	run_program(void)
+int	run_program(t_pipex *p) // alterar para void posteriormente
 {
 	t_dlist	**tokens;
 	char	*input;
@@ -34,9 +34,10 @@ int	run_program(void)
 		else if (*input != '\0')
 		{
 			tokens = lexer(input);
-			ft_print_dlist(tokens);
-			ft_destructor_struct(tokens);
+			// ft_print_dlist(tokens);
+			// ft_destructor_struct(tokens);
 			// parser(tokens);
+			
 			free(input);
 		}
 	}

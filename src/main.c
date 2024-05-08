@@ -12,7 +12,11 @@
 
 #include "minishell.h"
 
-int	main(void)
+int	main(char **envp) // alterar para void posteriormente
 {
-	return (run_program());
+	t_pipex	*pipex;
+
+	pipex = (t_pipex *)malloc(sizeof(t_pipex));
+	pipex->envp = envp;
+	return (run_program(pipex));
 }

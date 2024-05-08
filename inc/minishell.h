@@ -71,16 +71,17 @@ typedef struct s_dlist {
 	t_token			*tok;
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
+	int				pipes; // talvez eliminar posteriormente
 }	t_dlist;
 
 typedef struct s_ast
 {
-	enum e_type			id_t;
-	struct s_no_arvore	*esq;
-	struct s_no_arvore	*dir;
-	char		*path;
-	char		**cmd;
-	int			index;
+	enum e_type		id_t;
+	struct s_ast	*esq;
+	struct s_ast	*dir;
+	char			*path;
+	char			**cmd;
+	int				index;
 }	t_ast;
 
 typedef struct s_cmds
@@ -155,8 +156,9 @@ int		get_ret_process(int pid);
 int		last_exit_status(int exit_status);
 int		command_not_found(char *path, char **matrix);
 int		ft_count_tokens(t_dlist **exec_tokens);
-int		run_program(void);
+int		run_program(t_pipex *p); // alterar para void posteriormente
 int		have_pipe(t_dlist *tokens);
+size_t	matrix_len(char **mat); // talvez eliminar posteriormente essa função
 char	*catch_cwd(void);
 char	*hook_pwd(char *n_pwd, int to_free);
 char	*set_entrance(void);
