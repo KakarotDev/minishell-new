@@ -12,11 +12,13 @@
 
 #include "minishell.h"
 
-int	main(char **envp) // alterar para void posteriormente
+int	main(int argc, char **argv, char **envp) // alterar para void posteriormente
 {
 	t_pipex	*pipex;
 
 	pipex = (t_pipex *)malloc(sizeof(t_pipex));
+	pipex->argc = argc;
+	pipex->argv = argv;
 	pipex->envp = envp;
 	return (run_program(pipex));
 }

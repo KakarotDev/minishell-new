@@ -76,7 +76,7 @@ typedef struct s_dlist {
 
 typedef struct s_ast
 {
-	enum e_type		id_t;
+	enum e_type		type;
 	struct s_ast	*esq;
 	struct s_ast	*dir;
 	char			*path;
@@ -131,6 +131,9 @@ typedef struct s_pipex
 	int			f_id;
 }	t_pipex;
 
+// Ast functions
+void	ast_function(t_pipex *p, t_dlist **tokens);
+
 // Print functions
 void	ft_print_matrix(char **matrix);
 void	ft_print_dlist(t_dlist **head);
@@ -181,6 +184,9 @@ char	**copy_environ(void);
 
 // Environment procedures
 char	*read_var(char **environment, char *var);
+
+// Execution
+void	get_paths(t_pipex *p);
 
 // Lexer
 t_dlist	**lexer(char *input);

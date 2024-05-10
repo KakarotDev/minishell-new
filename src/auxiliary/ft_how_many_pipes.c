@@ -6,7 +6,7 @@
 /*   By: parthur- <parthur-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 17:44:59 by parthur-          #+#    #+#             */
-/*   Updated: 2024/05/07 18:21:16 by parthur-         ###   ########.fr       */
+/*   Updated: 2024/05/09 18:38:39 by parthur-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	have_pipe(t_dlist *tokens)
 	{
 		if (aux->tok->type == PIPE)
 			return (how_many_pipes(tokens));
-		aux = aux->prev;
+		aux = aux->next;
 	}
 	return (0);
 }

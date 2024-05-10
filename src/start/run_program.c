@@ -6,7 +6,7 @@
 /*   By: parthur- <parthur-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 17:01:47 by myokogaw          #+#    #+#             */
-/*   Updated: 2024/05/08 17:20:18 by parthur-         ###   ########.fr       */
+/*   Updated: 2024/05/09 18:21:57 by parthur-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	run_program(t_pipex *p) // alterar para void posteriormente
 		else if (*input != '\0')
 		{
 			tokens = lexer(input);
+			p->f_id = 1;
+			ast_function(p, tokens);
 			// ft_print_dlist(tokens);
 			// ft_destructor_struct(tokens);
 			// parser(tokens);
