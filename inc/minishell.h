@@ -49,7 +49,7 @@
 #define NOTSETHOME 2
 #define ERRNO 1
 
-enum	e_type
+enum e_type
 {
 	DGREAT = 1,
 	DLESS,
@@ -71,7 +71,7 @@ typedef struct s_dlist {
 	t_token			*tok;
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
-	int				pipes; // talvez eliminar posteriormente
+	int				pipes;
 }	t_dlist;
 
 typedef struct s_ast
@@ -132,7 +132,13 @@ typedef struct s_pipex
 }	t_pipex;
 
 // Ast functions
-void	ast_function(t_pipex *p, t_dlist **tokens);
+void	ast_function(t_dlist **tokens);
+void	standard_command_organizer(t_ast *raiz, t_pipex *p);
+void	first_command_organizer(t_ast *raiz, t_pipex *p);
+void	exec_cmd(t_ast *raiz, t_pipex *p);
+t_dlist	*free_chunk_list(t_dlist *tokens);
+t_ast	*cria_no_arv(t_dlist *tokens, t_pipex *p, int i, int t);
+t_ast	*adiciona_no(t_ast *raiz, t_ast *no);
 
 // Print functions
 void	ft_print_matrix(char **matrix);
@@ -145,8 +151,9 @@ char	*ft_strndup(char const *s, unsigned int start, size_t len);
 char	*ft_isspace(char *input, int fd);
 char	*get_content_var(char *var);
 void	free_struct_token(t_token *tok);
-void	ft_free_ast(t_ast **root);
+void	ft_free_ast(t_ast *root);
 void	ft_free_matrix(void **matrix);
+void	ft_free_matrix_char(char **matrix);
 void	ft_destructor_struct(t_dlist **struct_to_clean);
 void	ft_cpy_array_data(int *dst, int *src, int size);
 void	close_fds(int fd_max);
@@ -159,7 +166,7 @@ int		get_ret_process(int pid);
 int		last_exit_status(int exit_status);
 int		command_not_found(char *path, char **matrix);
 int		ft_count_tokens(t_dlist **exec_tokens);
-int		run_program(t_pipex *p); // alterar para void posteriormente
+int		run_program(void);
 int		have_pipe(t_dlist *tokens);
 size_t	matrix_len(char **mat); // talvez eliminar posteriormente essa função
 char	*catch_cwd(void);
@@ -173,7 +180,7 @@ void	ft_dlist_delete_from(t_dlist *start_node);
 void	ft_append_dlist(t_dlist **head, t_dlist *node);
 t_dlist	*ft_dlst_last(t_dlist *node);
 t_dlist	*ft_newnode_dlist(char *lexeme, enum e_type type,
-		int expansion_data[3]);
+			int expansion_data[3]);
 t_dlist	*ft_add_currnext(t_dlist *token, t_dlist *new_token, int iteration);
 t_dlist	*ft_cpy_node(t_dlist *node);
 t_dlist	*ft_dlist_last_occur(t_dlist **tokens, enum e_type type);
@@ -187,6 +194,9 @@ char	*read_var(char **environment, char *var);
 
 // Execution
 void	get_paths(t_pipex *p);
+char	*cria_path(t_dlist *tokens, t_pipex *p);
+t_ast	*cria_no_cmd(t_dlist *tokens, t_pipex *p, int i, int t);
+char	**cria_mat_cmds(t_dlist *tokens);
 
 // Lexer
 t_dlist	**lexer(char *input);

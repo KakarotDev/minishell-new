@@ -95,7 +95,7 @@ LIBFT_PATH = lib/libft
 MAIN_SRC = ./src/main.c
 
 # files mandatory #
-CFILES += $(addprefix $(AST)/, ast.c)
+CFILES += $(addprefix $(AST)/, ast.c ast_aux_functions.c)
 CFILES += $(addprefix $(AUXILIARY)/, free_struct_token.c ft_count_tokens.c ft_cpy_array_data.c ft_destructor_struct.c ft_free_ast.c \
 	ft_free_matrix.c ft_have_char.c ft_have_op.c ft_is_redirect.c ft_open_fd.c ft_open_fork.c ft_print_ast.c ft_print_dlist.c \
 	ft_print_matrix.c ft_strndup.c get_ret_process.c hook_environ.c last_exit_status.c syntax_error.c hook_pwd.c set_entrance.c ft_getenv.c \
