@@ -82,6 +82,7 @@ typedef struct s_ast
 	char			*path;
 	char			**cmd;
 	int				index;
+	struct s_ast	*first;
 }	t_ast;
 
 typedef struct s_cmds
@@ -151,7 +152,9 @@ char	*ft_strndup(char const *s, unsigned int start, size_t len);
 char	*ft_isspace(char *input, int fd);
 char	*get_content_var(char *var);
 void	free_struct_token(t_token *tok);
+void	closing_process(t_pipex *p, t_ast *raiz);
 void	ft_free_ast(t_ast *root);
+void	free_tokens(t_dlist *tokens);
 void	ft_free_matrix(void **matrix);
 void	ft_free_matrix_char(char **matrix);
 void	ft_destructor_struct(t_dlist **struct_to_clean);

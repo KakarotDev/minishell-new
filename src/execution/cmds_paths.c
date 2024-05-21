@@ -6,7 +6,7 @@
 /*   By: parthur- <parthur-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 18:09:03 by parthur-          #+#    #+#             */
-/*   Updated: 2024/05/11 23:22:33 by parthur-         ###   ########.fr       */
+/*   Updated: 2024/05/16 20:53:53 by parthur-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	**defining_commands(t_dlist *tokens, size_t mat_exec_len)
 	{
 		if (tokens->tok->type == WORD)
 		{
-			mat_exc[i] = tokens->tok->lex;
+			mat_exc[i] = ft_strdup(tokens->tok->lex);
 			i++;
 		}	
 		tokens = tokens->next;

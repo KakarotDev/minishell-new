@@ -6,7 +6,7 @@
 /*   By: parthur- <parthur-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 23:24:33 by parthur-          #+#    #+#             */
-/*   Updated: 2024/05/11 23:27:40 by parthur-         ###   ########.fr       */
+/*   Updated: 2024/05/17 01:49:27 by parthur-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ void	first_command_organizer(t_ast *raiz, t_pipex *p)
 	p->fd_exec[1] = p->pipe_fd[1];
 	p->fd_exec[0] = 0;
 	exec_cmd(raiz->esq, p);
-	close_fds(p->pipe_fd[1]);
-	exit(0);
+	closing_process(p, raiz);
 }
 
 void	standard_command_organizer(t_ast *raiz, t_pipex *p)
@@ -35,14 +34,22 @@ t_dlist	*free_chunk_list(t_dlist *tokens)
 {
 	while (tokens->next != NULL)
 		tokens = tokens->next;
-	while (tokens->tok->type != PIPE)
+	while (tokens->tok->type != PIPE && tokens->prev)
 	{
 		tokens = tokens->prev;
-		free(tokens->next);
+		free_tokens(tokens->next);
 	}
-	tokens = tokens->prev;
-	free(tokens->next);
-	tokens->next = NULL;
+	if (tokens->prev)
+	{
+		tokens = tokens->prev;
+		free_tokens(tokens->next);
+		tokens->next = NULL;
+	}
+	else
+	{
+		free_tokens(tokens);
+		tokens = NULL;
+	}
 	return (tokens);
 }
 

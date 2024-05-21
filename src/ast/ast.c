@@ -6,7 +6,7 @@
 /*   By: parthur- <parthur-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 18:00:50 by parthur-          #+#    #+#             */
-/*   Updated: 2024/05/12 23:14:03 by parthur-         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:43:57 by parthur-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_ast	*cria_arvore(t_dlist **t, t_pipex *p)
 		else
 		{
 			esq = cria_no_cmd(aux, p, i, t[0]->pipes);
+			aux = free_chunk_list(t[0]);
 			raiz = adiciona_no(raiz, esq);
 		}
 		i--;
@@ -72,9 +73,9 @@ void	tree_exec(t_ast *raiz, t_pipex *p, int fd)
 		if (p->f_id == 0)
 		{
 			fd = p->pipe_fd[1];
+			raiz->esq->first = raiz->first;
 			tree_exec(raiz->esq, p, fd);
-			close_fds(p->pipe_fd[1]);
-			exit(0);
+			closing_process(p, raiz);
 		}
 		waitpid(p->f_id, NULL, 0);
 	}
@@ -88,6 +89,21 @@ void	tree_exec(t_ast *raiz, t_pipex *p, int fd)
 	standard_command_organizer(raiz, p);
 }
 
+void	closing_father(t_pipex *p, t_ast *raiz)
+{
+	ft_free_ast(raiz);
+	ft_free_matrix_char(p->paths.mat_path);
+	free(p);
+}
+
+void	closing_only_child(t_pipex *p, t_ast *raiz, t_dlist *tokens)
+{
+	ft_free_matrix_char(p->paths.mat_path);
+	free(p);
+	ft_free_ast(raiz);
+	free_chunk_list(tokens);
+}
+
 void	ast_function(t_dlist **tokens)
 {
 	t_ast	*raiz;
@@ -99,8 +115,11 @@ void	ast_function(t_dlist **tokens)
 	if (tokens[0]->pipes > 0)
 	{
 		raiz = cria_arvore(tokens, p);
+		free(tokens);
+		raiz->first = raiz;
 		tree_exec(raiz, p, STDOUT_FILENO);
 		wait(NULL);
+		closing_father(p, raiz);
 	}	
 	else
 	{
@@ -108,6 +127,8 @@ void	ast_function(t_dlist **tokens)
 		p->f_id = fork();
 		if (p->f_id == 0)
 			execve(raiz->path, raiz->cmd, hook_environ(NULL, 0));
-		waitpid(p->f_id, NULL, 0);
+		waitpid(-1, NULL, 0);
+		closing_only_child(p, raiz, tokens[0]);
+		free(tokens);
 	}
 }
